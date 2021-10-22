@@ -1,0 +1,10 @@
+<resources>
+    <string name="app_name">SpaceX</string>
+    <string name="title_company">COMPANY</string>
+    <string name="title_launches">LAUNCHES</string>
+    <string name="days_since_now">Days %1$s now:</string>
+    <string name="since">since</string>
+    <string name="from">from</string>
+    <string name="open_info">Open</string>
+    <string name="choose_open_info">Select the source to see more information</string>
+</resources>
