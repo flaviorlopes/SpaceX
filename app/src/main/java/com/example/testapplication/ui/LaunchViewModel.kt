@@ -15,7 +15,7 @@ class LaunchViewModel : ViewModel() {
     var filter: MutableLiveData<FilterLaunches> = MutableLiveData()
     var launches: MutableLiveData<List<Launch>> = MutableLiveData()
 
-    val companyInfo: MutableLiveData<CompanyInfo> by lazy {
+    private val companyInfo: MutableLiveData<CompanyInfo> by lazy {
         MutableLiveData<CompanyInfo>().also {
             loadCompanyInfo()
         }
