@@ -3,62 +3,80 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    tools:context=".ui.FilterDialogFragment"
     android:layout_gravity="center_horizontal"
+    android:orientation="vertical"
     android:padding="20dp"
-    android:orientation="vertical">
+    tools:context=".ui.FilterDialogFragment">
 
     <TextView
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:text="@string/select_year"
-        android:gravity="center"/>
+        android:gravity="center"
+        android:text="@string/select_year" />
 
     <NumberPicker
         android:id="@+id/np_year"
         android:layout_width="100dp"
         android:layout_height="wrap_content"
-        android:layout_gravity="center">
-    </NumberPicker>
+        android:layout_gravity="center"></NumberPicker>
 
     <CheckBox
         android:id="@+id/cbSuccess"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:text="@string/launch_success"
-        />
+        android:text="@string/launch_success" />
 
     <RadioGroup
         android:id="@+id/rgOrder"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:orientation="horizontal"
         android:layout_marginTop="10dp"
+        android:orientation="horizontal"
         android:weightSum="2">
+
         <RadioButton
             android:id="@+id/rbAsc"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_weight="1"
-            android:gravity="center"
             android:checked="true"
-            android:text="Ascending"/>
+            android:gravity="center"
+            android:text="Ascending" />
+
         <RadioButton
             android:id="@+id/rbDes"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_weight="1"
             android:gravity="center"
-            android:text="Descending"/>
+            android:text="Descending" />
     </RadioGroup>
 
-    <Button
-        android:id="@+id/btnFilterLaunches"
+    <LinearLayout
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
+        android:layout_height="match_parent"
+        android:orientation="horizontal"
         android:layout_marginTop="20dp"
-        android:layout_marginHorizontal="25dp"
-        android:background="@color/teal_700"
-        android:textColor="@color/white"
-        android:text="@string/filter"/>
+        android:weightSum="2">
+
+        <Button
+            android:layout_weight="1"
+            android:id="@+id/btnFilterLaunches"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:background="@color/purple_700"
+            android:layout_marginEnd="10dp"
+            android:text="@string/filter"
+            android:textColor="@color/white" />
+
+        <Button
+            android:layout_weight="1"
+            android:id="@+id/btnClearFilterLaunches"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:background="@color/teal_700"
+            android:layout_marginStart="10dp"
+            android:text="@string/clear"
+            android:textColor="@color/white" />
+    </LinearLayout>
 </LinearLayout>

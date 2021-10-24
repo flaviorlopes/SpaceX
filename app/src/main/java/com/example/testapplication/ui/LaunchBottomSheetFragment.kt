@@ -45,7 +45,7 @@ class LaunchBottomSheetFragment : BottomSheetDialogFragment() {
             rvInfo = view.findViewById(R.id.info_options_recycler)
             btnClose = view.findViewById(R.id.btn_close_info)
             rvInfo.layoutManager = GridLayoutManager(context, 3)
-            adapter = InfoAdapter(0, infos)
+            adapter = InfoAdapter(infos)
             rvInfo.adapter = adapter
             setListeners()
         }

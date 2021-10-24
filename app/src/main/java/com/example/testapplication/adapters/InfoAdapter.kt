@@ -1,25 +1,20 @@
 package com.example.testapplication.adapters
 
 import android.content.Context
+import android.content.Intent
+import android.net.Uri
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.RelativeLayout
 import android.widget.TextView
+import androidx.core.content.ContextCompat.startActivity
 import androidx.recyclerview.widget.RecyclerView
 import com.example.testapplication.R
 import com.example.testapplication.models.requests.GenericKeyValueItem
-import android.content.Intent
-
-import androidx.core.content.ContextCompat.startActivity
-
-import android.content.ActivityNotFoundException
-import android.net.Uri
-import androidx.core.content.ContextCompat
 
 
 class InfoAdapter(
-    var selectedItem: Int = -1,
     private var items: List<GenericKeyValueItem>
     ): RecyclerView.Adapter<InfoAdapter.ViewHolder>() {
 
@@ -32,7 +27,7 @@ class InfoAdapter(
     }
 
     override fun onBindViewHolder(holder: ViewHolder, position: Int) {
-        holder.setContent(items[position], position)
+        holder.setContent(items[position])
 
         holder.itemView.setOnClickListener() {
             val item = items[position]
@@ -59,7 +54,7 @@ class InfoAdapter(
             textInfo = itemView.findViewById(R.id.text_Info)
         }
 
-        fun setContent(item: GenericKeyValueItem, position: Int) {
+        fun setContent(item: GenericKeyValueItem) {
             textInfo.text = item.Key
             linkInfo = item.Key
         }

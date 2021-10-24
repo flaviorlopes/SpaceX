@@ -5,9 +5,7 @@ import android.content.Context
 import android.content.Intent
 import android.content.IntentFilter
 import android.os.Bundle
-import android.view.LayoutInflater
-import android.view.View
-import android.view.ViewGroup
+import android.view.*
 import android.widget.TextView
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
@@ -41,6 +39,7 @@ class LaunchFragment : Fragment() {
     private lateinit var launchesAdapter: RecyclerView.Adapter<LaunchAdapter.MyAdapterViewHolder>
     private lateinit var tvCompanyInfo: TextView
     private lateinit var srLaunches: SwipeRefreshLayout
+    private var filterLaunch: FilterLaunches? = null
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -49,8 +48,25 @@ class LaunchFragment : Fragment() {
             param2 = it.getString(ARG_PARAM2)
         }
 
+        setHasOptionsMenu(true)
         setObservers()
         setReceivers()
+    }
+
+    override fun onCreateOptionsMenu(menu: Menu, inflater: MenuInflater) {
+        inflater.inflate(R.menu.main_menu, menu)
+    }
+
+    override fun onOptionsItemSelected(item: MenuItem): Boolean {
+        when (item.itemId) {
+            R.id.filter_menu -> {
+                val dialog = FilterDialogFragment.newInstance(mViewModel.filter.value)
+                activity?.let {
+                    dialog.show(it.supportFragmentManager, FilterDialogFragment.TAG)
+                }
+            }
+        }
+        return super.onOptionsItemSelected(item)
     }
 
     override fun onCreateView(
@@ -112,14 +128,14 @@ class LaunchFragment : Fragment() {
             "${info.name} was founded by ${info.founder} in ${info.founded}. It has now ${info.employees} employees, ${info.launch_sites} launch sites, and is valued at USD ${info.valuation / 100}"
     }
 
-    private fun prepareRecyclerView(launches:List<Launch>) {
+    private fun prepareRecyclerView(launches: List<Launch>) {
         launchesAdapter = LaunchAdapter(launches)
         rvLaunches.adapter = launchesAdapter
         rvLaunches.layoutManager = LinearLayoutManager(activity)
     }
 
     private fun setReceivers() {
-        val brLogout: BroadcastReceiver = object : BroadcastReceiver() {
+        val brFilter: BroadcastReceiver = object : BroadcastReceiver() {
             override fun onReceive(context: Context?, intent: Intent) {
                 val action = intent.action
                 if (action == "filter") {
@@ -130,16 +146,19 @@ class LaunchFragment : Fragment() {
 
         context?.let {
             LocalBroadcastManager.getInstance(it)
-                .registerReceiver(brLogout, IntentFilter("filter"))
+                .registerReceiver(brFilter, IntentFilter("filter"))
         }
     }
 
     private fun filterLaunches(intent: Intent) {
-        val year = intent.getIntExtra("year", 0)
-        val ordering = intent.getStringExtra("ordering") ?: "asc"
-        val success: Boolean = intent.getBooleanExtra("success", false)
-        val filter = FilterLaunches(year, ordering, success)
-        mViewModel.filter.value=filter
+        mViewModel.filter.value = null
+        intent.extras?.let{
+            val year = intent.getIntExtra("year", 0)
+            val ordering = intent.getStringExtra("ordering") ?: "asc"
+            val success: Boolean = intent.getBooleanExtra("success", false)
+            val filter = FilterLaunches(year, ordering, success)
+            mViewModel.filter.value = filter
+        }
         RefreshLaunches()
     }
 

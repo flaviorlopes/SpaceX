@@ -21,6 +21,7 @@ private const val ARG_PARAM1 = "param1"
 class FilterDialogFragment : DialogFragment() {
     private var pFilter: FilterLaunches? = null
     private lateinit var btnFilter: Button
+    private lateinit var btnClear: Button
     private lateinit var cbSucess: CheckBox
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -39,6 +40,7 @@ class FilterDialogFragment : DialogFragment() {
             pickerYear.minValue = 2006
             pickerYear.wrapSelectorWheel = false;
             btnFilter = it.findViewById(R.id.btnFilterLaunches)
+            btnClear = it.findViewById(R.id.btnClearFilterLaunches)
             cbSucess = it.findViewById(R.id.cbSuccess)
             val rgOrdering = it.findViewById<RadioGroup>(R.id.rgOrder)
 
@@ -69,6 +71,14 @@ class FilterDialogFragment : DialogFragment() {
                 broadCastManager.sendBroadcast(intent)
                 dismiss()
             }
+
+            btnClear.setOnClickListener() {
+                val broadCastManager = LocalBroadcastManager.getInstance(TestApplication.getInstance())
+                val intent = Intent()
+                intent.action = "filter"
+                broadCastManager.sendBroadcast(intent)
+                dismiss()
+            }
         }
         val alert = AlertDialog.Builder(context)
         alert.setView(view)
@@ -77,10 +87,10 @@ class FilterDialogFragment : DialogFragment() {
 
     companion object {
         @JvmStatic
-        fun newInstance() =
+        fun newInstance(param1: FilterLaunches?) =
             FilterDialogFragment().apply {
                 arguments = Bundle().apply {
-                    putParcelable(ARG_PARAM1, pFilter)
+                    putParcelable(ARG_PARAM1, param1)
                 }
             }
 
