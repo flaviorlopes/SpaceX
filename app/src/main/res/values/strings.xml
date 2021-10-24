@@ -11,4 +11,5 @@
     <string name="clear">Clear</string>
     <string name="select_year">Select the launch year</string>
     <string name="launch_success">Only succeed launches</string>
+    <string name="companyInfo">%1$s was founded by %2$s in %3$s. It has now %4$d employees, %5$d launch sites, and is valued at USD %6$s</string>
 </resources>

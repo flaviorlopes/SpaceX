@@ -12,8 +12,17 @@ import kotlinx.coroutines.launch
 
 
 class LaunchViewModel : ViewModel() {
-    var filter: MutableLiveData<FilterLaunches> = MutableLiveData()
-    var launches: MutableLiveData<List<Launch>> = MutableLiveData()
+    var filter: FilterLaunches? = null
+
+    private val launches: MutableLiveData<List<Launch>> by lazy {
+        MutableLiveData<List<Launch>>().also {
+            loadLaunches()
+        }
+    }
+
+    fun getLaunches(): LiveData<List<Launch>> {
+        return launches
+    }
 
     private val companyInfo: MutableLiveData<CompanyInfo> by lazy {
         MutableLiveData<CompanyInfo>().also {
@@ -35,9 +44,11 @@ class LaunchViewModel : ViewModel() {
     fun loadLaunches() {
         viewModelScope.launch {
             val ls = mutableListOf<Launch>()
-            if (filter.value?.year != null && filter.value?.order != null) {
-                val success = if (filter.value!!.success) true else null
-                ls.addAll(RetrofitHelper.retrofit.getLaunchesFiltered(filter.value!!.year, filter.value!!.order, success))
+            if (filter != null) {
+                filter?.let{
+                    val success = if (it.success) true else null
+                    ls.addAll(RetrofitHelper.retrofit.getLaunchesFiltered(it.year, it.order, success))
+                }
             } else {
                 ls.addAll(RetrofitHelper.retrofit.getLaunches())
             }

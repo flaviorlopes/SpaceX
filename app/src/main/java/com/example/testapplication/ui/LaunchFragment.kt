@@ -19,6 +19,7 @@ import com.example.testapplication.adapters.LaunchAdapter
 import com.example.testapplication.models.CompanyInfo
 import com.example.testapplication.models.Launch
 import com.example.testapplication.models.requests.FilterLaunches
+import java.text.NumberFormat
 
 // TODO: Rename parameter arguments, choose names that match
 // the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
@@ -39,7 +40,6 @@ class LaunchFragment : Fragment() {
     private lateinit var launchesAdapter: RecyclerView.Adapter<LaunchAdapter.MyAdapterViewHolder>
     private lateinit var tvCompanyInfo: TextView
     private lateinit var srLaunches: SwipeRefreshLayout
-    private var filterLaunch: FilterLaunches? = null
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -60,7 +60,7 @@ class LaunchFragment : Fragment() {
     override fun onOptionsItemSelected(item: MenuItem): Boolean {
         when (item.itemId) {
             R.id.filter_menu -> {
-                val dialog = FilterDialogFragment.newInstance(mViewModel.filter.value)
+                val dialog = FilterDialogFragment.newInstance(mViewModel.filter)
                 activity?.let {
                     dialog.show(it.supportFragmentManager, FilterDialogFragment.TAG)
                 }
@@ -81,8 +81,6 @@ class LaunchFragment : Fragment() {
         rvLaunches = view.findViewById(R.id.rvLaunches)
         tvCompanyInfo = view.findViewById(R.id.tvCompanyInfo)
         srLaunches = view.findViewById(R.id.srLaunches)
-        mViewModel.getInfo()
-        RefreshLaunches()
 
         srLaunches.setOnRefreshListener {
             RefreshLaunches()
@@ -99,16 +97,10 @@ class LaunchFragment : Fragment() {
     private fun RefreshLaunches() {
         srLaunches.isRefreshing = true
         mViewModel.loadLaunches()
-        mViewModel.launches.observe(viewLifecycleOwner, Observer<List<Launch>> { launches ->
-            if (launches != null) {
-                prepareRecyclerView(launches)
-            }
-            srLaunches.isRefreshing = false
-        })
     }
 
     private fun setObservers() {
-        mViewModel.launches.observe(this, Observer<List<Launch>> { launches ->
+        mViewModel.getLaunches().observe(this, Observer<List<Launch>> { launches ->
             if (launches != null) {
                 prepareRecyclerView(launches)
             }
@@ -123,8 +115,12 @@ class LaunchFragment : Fragment() {
     }
 
     private fun setCompanyInfo(info: CompanyInfo) {
-        tvCompanyInfo.text =
-            "${info.name} was founded by ${info.founder} in ${info.founded}. It has now ${info.employees} employees, ${info.launch_sites} launch sites, and is valued at USD ${info.valuation / 100}"
+        context?.let {
+            val numberFormat = NumberFormat.getCurrencyInstance()
+            val valuation = numberFormat.format(info.valuation)
+            tvCompanyInfo.text =
+                it.getString(R.string.companyInfo, info.name, info.founder, info.founded, info.employees, info.launch_sites, valuation)
+        }
     }
 
     private fun prepareRecyclerView(launches: List<Launch>) {
@@ -150,13 +146,13 @@ class LaunchFragment : Fragment() {
     }
 
     private fun filterLaunches(intent: Intent) {
-        mViewModel.filter.value = null
+        mViewModel.filter = null
         intent.extras?.let{
             val year = intent.getIntExtra("year", 0)
             val ordering = intent.getStringExtra("ordering") ?: "asc"
             val success: Boolean = intent.getBooleanExtra("success", false)
             val filter = FilterLaunches(year, ordering, success)
-            mViewModel.filter.value = filter
+            mViewModel.filter = filter
         }
         RefreshLaunches()
     }
