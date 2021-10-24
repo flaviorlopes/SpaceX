@@ -20,6 +20,7 @@ import com.example.testapplication.R
 import com.example.testapplication.adapters.LaunchAdapter
 import com.example.testapplication.models.CompanyInfo
 import com.example.testapplication.models.Launch
+import com.example.testapplication.models.requests.FilterLaunches
 
 // TODO: Rename parameter arguments, choose names that match
 // the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
@@ -66,6 +67,7 @@ class LaunchFragment : Fragment() {
         tvCompanyInfo = view.findViewById(R.id.tvCompanyInfo)
         srLaunches = view.findViewById(R.id.srLaunches)
         mViewModel.getInfo()
+        RefreshLaunches()
 
         srLaunches.setOnRefreshListener {
             RefreshLaunches()
@@ -81,7 +83,8 @@ class LaunchFragment : Fragment() {
 
     private fun RefreshLaunches() {
         srLaunches.isRefreshing = true
-        mViewModel.getLaunches().observe(viewLifecycleOwner, Observer<List<Launch>> { launches ->
+        mViewModel.loadLaunches()
+        mViewModel.launches.observe(viewLifecycleOwner, Observer<List<Launch>> { launches ->
             if (launches != null) {
                 prepareRecyclerView(launches)
             }
@@ -90,7 +93,7 @@ class LaunchFragment : Fragment() {
     }
 
     private fun setObservers() {
-        mViewModel.getLaunches().observe(this, Observer<List<Launch>> { launches ->
+        mViewModel.launches.observe(this, Observer<List<Launch>> { launches ->
             if (launches != null) {
                 prepareRecyclerView(launches)
             }
@@ -131,11 +134,13 @@ class LaunchFragment : Fragment() {
         }
     }
 
-
-
     private fun filterLaunches(intent: Intent) {
         val year = intent.getIntExtra("year", 0)
-        val ordering = intent.getStringExtra("ordering")
+        val ordering = intent.getStringExtra("ordering") ?: "asc"
+        val success: Boolean = intent.getBooleanExtra("success", false)
+        val filter = FilterLaunches(year, ordering, success)
+        mViewModel.filter.value=filter
+        RefreshLaunches()
     }
 
     companion object {

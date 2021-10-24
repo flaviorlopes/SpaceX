@@ -4,34 +4,21 @@ import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import androidx.paging.Pager
-import androidx.paging.PagingConfig
-import androidx.paging.PagingData
 import com.example.testapplication.models.CompanyInfo
 import com.example.testapplication.models.Launch
+import com.example.testapplication.models.requests.FilterLaunches
 import com.example.testapplication.services.RetrofitHelper
-import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.launch
 
 
 class LaunchViewModel : ViewModel() {
-    var isReady: MutableLiveData<Boolean> = MutableLiveData()
-
-    val launches: MutableLiveData<List<Launch>> by lazy {
-        MutableLiveData<List<Launch>>().also {
-            loadLaunches()
-        }
-    }
-
+    var filter: MutableLiveData<FilterLaunches> = MutableLiveData()
+    var launches: MutableLiveData<List<Launch>> = MutableLiveData()
 
     val companyInfo: MutableLiveData<CompanyInfo> by lazy {
         MutableLiveData<CompanyInfo>().also {
             loadCompanyInfo()
         }
-    }
-
-    fun getLaunches(): LiveData<List<Launch>> {
-        return launches
     }
 
     fun getInfo(): LiveData<CompanyInfo> {
@@ -45,12 +32,19 @@ class LaunchViewModel : ViewModel() {
         }
     }
 
-    private fun loadLaunches() {
+    fun loadLaunches() {
         viewModelScope.launch {
             val ls = mutableListOf<Launch>()
-            ls.addAll(RetrofitHelper.retrofit.getLaunches())
+            if (filter.value?.year != null && filter.value?.order != null) {
+                val success = if (filter.value!!.success) true else null
+                ls.addAll(RetrofitHelper.retrofit.getLaunchesFiltered(filter.value!!.year, filter.value!!.order, success))
+            } else {
+                ls.addAll(RetrofitHelper.retrofit.getLaunches())
+            }
             launches.postValue(ls)
         }
     }
+
+
 
 }

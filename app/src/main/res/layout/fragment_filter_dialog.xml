@@ -21,6 +21,13 @@
         android:layout_gravity="center">
     </NumberPicker>
 
+    <CheckBox
+        android:id="@+id/cbSuccess"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="@string/launch_success"
+        />
+
     <RadioGroup
         android:id="@+id/rgOrder"
         android:layout_width="match_parent"
