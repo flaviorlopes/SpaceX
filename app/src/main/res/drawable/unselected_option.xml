@@ -8,7 +8,7 @@
             <!-- set the shadow color here -->
             <stroke
                 android:width="3dp"
-                android:color="@color/primary_blue_shadow" />
+                android:color="@color/unselected_option_shadow" />
 
             <!-- setting the thickness of shadow (positive value will give shadow on that side) -->
 
@@ -29,8 +29,8 @@
             <corners android:radius="18dp" />
             <stroke
                 android:width="0.5dp"
-                android:color="#8FB4E2" />
-            <solid android:color="@color/primary_blue_light" />
+                android:color="@color/unselected_option_border" />
+            <solid android:color="@color/unselected_option_background" />
         </shape>
     </item>
 

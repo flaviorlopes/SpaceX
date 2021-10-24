@@ -5,6 +5,8 @@
     <string name="days_since_now">Days %1$s now:</string>
     <string name="since">since</string>
     <string name="from">from</string>
-    <string name="open_info">Open</string>
-    <string name="choose_open_info">Select the source to see more information</string>
+    <string name="close_info">Close</string>
+    <string name="choose_open_info">Select one source to see more information</string>
+    <string name="filter">Filter</string>
+    <string name="select_year">Select the launch year</string>
 </resources>

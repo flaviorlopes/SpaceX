@@ -1,5 +1,9 @@
 package com.example.testapplication.ui
 
+import android.content.BroadcastReceiver
+import android.content.Context
+import android.content.Intent
+import android.content.IntentFilter
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
@@ -8,11 +12,12 @@ import android.widget.TextView
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
 import androidx.lifecycle.Observer
+import androidx.localbroadcastmanager.content.LocalBroadcastManager
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import androidx.swiperefreshlayout.widget.SwipeRefreshLayout
 import com.example.testapplication.R
-import com.example.testapplication.adapters.MyAdapter
+import com.example.testapplication.adapters.LaunchAdapter
 import com.example.testapplication.models.CompanyInfo
 import com.example.testapplication.models.Launch
 
@@ -32,7 +37,7 @@ class LaunchFragment : Fragment() {
     private var param2: String? = null
     val mViewModel: LaunchViewModel by viewModels()
     private lateinit var rvLaunches: RecyclerView
-    private lateinit var launchesAdapter: RecyclerView.Adapter<MyAdapter.MyAdapterViewHolder>
+    private lateinit var launchesAdapter: RecyclerView.Adapter<LaunchAdapter.MyAdapterViewHolder>
     private lateinit var tvCompanyInfo: TextView
     private lateinit var srLaunches: SwipeRefreshLayout
 
@@ -44,6 +49,7 @@ class LaunchFragment : Fragment() {
         }
 
         setObservers()
+        setReceivers()
     }
 
     override fun onCreateView(
@@ -104,9 +110,32 @@ class LaunchFragment : Fragment() {
     }
 
     private fun prepareRecyclerView(launches:List<Launch>) {
-        launchesAdapter = MyAdapter(launches)
+        launchesAdapter = LaunchAdapter(launches)
         rvLaunches.adapter = launchesAdapter
         rvLaunches.layoutManager = LinearLayoutManager(activity)
+    }
+
+    private fun setReceivers() {
+        val brLogout: BroadcastReceiver = object : BroadcastReceiver() {
+            override fun onReceive(context: Context?, intent: Intent) {
+                val action = intent.action
+                if (action == "filter") {
+                    filterLaunches(intent)
+                }
+            }
+        }
+
+        context?.let {
+            LocalBroadcastManager.getInstance(it)
+                .registerReceiver(brLogout, IntentFilter("filter"))
+        }
+    }
+
+
+
+    private fun filterLaunches(intent: Intent) {
+        val year = intent.getIntExtra("year", 0)
+        val ordering = intent.getStringExtra("ordering")
     }
 
     companion object {

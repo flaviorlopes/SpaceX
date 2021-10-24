@@ -12,6 +12,9 @@
         <entry key="..\:/TestAPP/app/src/main/res/layout/card_launch.xml" value="0.4" />
         <entry key="..\:/TestAPP/app/src/main/res/layout/frag_character.xml" value="0.2526041666666667" />
         <entry key="..\:/TestAPP/app/src/main/res/layout/frag_launch.xml" value="0.2526041666666667" />
+        <entry key="..\:/TestAPP/app/src/main/res/layout/fragment_filter_dialog.xml" value="0.2526041666666667" />
+        <entry key="..\:/TestAPP/app/src/main/res/layout/item_info_adapter.xml" value="0.2526041666666667" />
+        <entry key="..\:/TestAPP/app/src/main/res/menu/main_menu.xml" value="0.2526041666666667" />
       </map>
     </option>
   </component>

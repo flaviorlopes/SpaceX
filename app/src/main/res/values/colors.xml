@@ -17,4 +17,9 @@
     <color name="primary_blue_shadow">#1A0071CE</color>
     <color name="primary_blue_light">#c1dcf3</color>
     <color name="primary_blue">#0071CE</color>
+    <color name="selected_option_background">#262626</color>
+    <color name="selected_option_border">#000000</color>
+    <color name="unselected_option_background">#727272</color>
+    <color name="unselected_option_border">#595959</color>
+    <color name="unselected_option_shadow">#000000</color>
 </resources>

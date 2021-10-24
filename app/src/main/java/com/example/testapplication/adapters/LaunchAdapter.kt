@@ -1,8 +1,9 @@
 package com.example.testapplication.adapters
 
-import android.app.Activity
 import android.content.Context
 import android.os.Build
+import android.os.Bundle
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -10,9 +11,7 @@ import android.widget.ImageView
 import android.widget.ProgressBar
 import android.widget.TextView
 import androidx.annotation.RequiresApi
-import androidx.fragment.app.Fragment
 import androidx.fragment.app.FragmentActivity
-import androidx.fragment.app.FragmentManager
 import androidx.recyclerview.widget.RecyclerView
 import com.example.testapplication.R
 import com.example.testapplication.models.Launch
@@ -22,10 +21,10 @@ import com.squareup.picasso.Picasso
 import kotlin.math.abs
 
 
-class MyAdapter(
+class LaunchAdapter(
     private var launchers: List<Launch>
-) : RecyclerView.Adapter<MyAdapter.MyAdapterViewHolder>() {
-    private lateinit var launch: Launch
+) : RecyclerView.Adapter<LaunchAdapter.MyAdapterViewHolder>() {
+    //private lateinit var launch: Launch
     private lateinit var context: Context
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): MyAdapterViewHolder {
@@ -42,22 +41,15 @@ class MyAdapter(
     override fun onBindViewHolder(holder: MyAdapterViewHolder, position: Int) {
         val context = holder.itemView.context
 
-        holder.itemView.setOnClickListener {
-            val activity = context as FragmentActivity
-            val fm = activity.supportFragmentManager
-            val modalBottomSheet = LaunchBottomSheetFragment()
-            modalBottomSheet.show(fm, LaunchBottomSheetFragment.TAG)
-        }
-
         holder.progress.visibility = View.VISIBLE
 
-        launch = launchers[position]
+        val launch: Launch = launchers[position]
 
         holder.pacthImage.contentDescription = "Mission patch image of ${launch.mission_name}"
 
         if (launch.links.mission_patch_small.isEmpty()) {
             holder.progress.visibility = View.GONE
-            /*holder.photo.setImageResource(R.drawable.semfoto)*/
+            holder.pacthImage.setImageResource(R.drawable.noimage)
         } else {
             Picasso.get()
                 .load("${launch.links.mission_patch_small}")
@@ -72,7 +64,7 @@ class MyAdapter(
                         override fun onError(e: Exception?) {
                             // Erro no download
                             holder.progress.visibility = View.GONE
-                            /*holder.photo.setImageResource(R.drawable.semfoto)*/
+                            holder.pacthImage.setImageResource(R.drawable.noimage)
                         }
                     })
 
@@ -97,6 +89,17 @@ class MyAdapter(
                 labelDays.text = context.getString(R.string.days_since_now, context.getString(R.string.since))
             else
                 labelDays.text = context.getString(R.string.days_since_now, context.getString(R.string.from))
+
+            itemView.setOnClickListener {
+                val activity = context as FragmentActivity
+                val fm = activity.supportFragmentManager
+                val modalBottomSheet = LaunchBottomSheetFragment()
+                val bundle = Bundle()
+                bundle.putParcelable("links", launch.links)
+                modalBottomSheet.arguments = bundle
+                modalBottomSheet.show(fm, LaunchBottomSheetFragment.TAG)
+            }
+
         }
 
     }
