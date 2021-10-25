@@ -116,7 +116,7 @@ class LaunchFragment : Fragment() {
 
     private fun setCompanyInfo(info: CompanyInfo) {
         context?.let {
-            val numberFormat = NumberFormat.getCurrencyInstance()
+            val numberFormat = NumberFormat.getNumberInstance()
             val valuation = numberFormat.format(info.valuation)
             tvCompanyInfo.text =
                 it.getString(R.string.companyInfo, info.name, info.founder, info.founded, info.employees, info.launch_sites, valuation)
